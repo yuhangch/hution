@@ -66,22 +66,23 @@ Assume there is a database named "Post Drafts", specify it's id to `.env`, "Post
 ### Run
 
 ```shell
-git clone https://github.com/yuhangch/hution-dev.git
+git clone https://github.com/yuhangch/hution.git
 cd hution
-deno run --allow-env --allow-net --allow-write hution.ts post-slug
+deno run --allow-env --allow-net --allow-read --allow-write hution.ts post-slug
 ```
 
 or specify a sub folder, markdown will written to `$OUT/category-1`
 
 ```shell
-deno run --allow-env --allow-net --allow-write hution.ts post-slug category-1
+deno run --allow-env --allow-net --allow-read --allow-write hution.ts post-slug category-1
 ```
 
 or use online script
 
 ```shell
-deno run --allow-env --allow-net --allow-write https://raw.githubusercontent.com/yuhangch/hution/master/hution.ts post-slug
+deno run --allow-env --allow-net --allow-read --allow-write https://raw.githubusercontent.com/yuhangch/hution/master/hution.ts post-slug
 ```
+or use cdn `https://cdn.jsdelivr.net/gh/yuhangch/hution@master/hution.ts`
 
 or compile script as a executable file, reference [this](https://deno.land/manual/tools/compiler#compiling-executables).
 
