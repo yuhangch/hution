@@ -68,7 +68,7 @@ const handle_page = async (page: any) => {
         categoriesMultiSelect.forEach((element: { name: string }) => {
             categories.push(element.name);
         });
-        console.log("categories" + categories);
+        console.log("categories: " + categories);
     }
     // parse tags
     const tagsProperty = page.properties.Tags as any;

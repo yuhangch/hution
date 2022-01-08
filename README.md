@@ -13,7 +13,7 @@ hugo <- notion, get formatted hugo post markdown from notion by slug.
 5. Run script use [Deno](https://deno.land/).
 
 ```shell
-❯ deno run --allow-env --allow-net --allow-read --allow-write hution.ts post-title-slug
+❯ deno run --allow-net --allow-read --allow-write hution.ts post-title-slug
 slug:post-title-slug
 title: Post title
 date: 2022-01-08T02:37:00.000Z
@@ -68,19 +68,19 @@ Assume there is a database named "Post Drafts", specify it's id to `.env`, "Post
 ```shell
 git clone https://github.com/yuhangch/hution.git
 cd hution
-deno run --allow-env --allow-net --allow-read --allow-write hution.ts post-slug
+deno run --allow-net --allow-read --allow-write hution.ts post-slug
 ```
 
 or specify a sub folder, markdown will written to `$OUT/category-1`
 
 ```shell
-deno run --allow-env --allow-net --allow-read --allow-write hution.ts post-slug category-1
+deno run --allow-net --allow-read --allow-write hution.ts post-slug category-1
 ```
 
 or use online script
 
 ```shell
-deno run --allow-env --allow-net --allow-read --allow-write https://raw.githubusercontent.com/yuhangch/hution/master/hution.ts post-slug
+deno run --allow-net --allow-read --allow-write https://raw.githubusercontent.com/yuhangch/hution/master/hution.ts post-slug
 ```
 or use cdn `https://cdn.jsdelivr.net/gh/yuhangch/hution@master/hution.ts`
 
