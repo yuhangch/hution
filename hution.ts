@@ -1,6 +1,6 @@
-import { Client } from "https://deno.land/x/notion_sdk/src/mod.ts";
-import { config } from "https://deno.land/x/dotenv/mod.ts";
-import { JSZip } from "https://deno.land/x/jszip/mod.ts";
+import {Client} from "https://deno.land/x/notion_sdk/src/mod.ts";
+import {config} from "https://deno.land/x/dotenv/mod.ts";
+import {JSZip} from "https://deno.land/x/jszip/mod.ts";
 import * as path from "https://deno.land/std/path/mod.ts";
 
 if (Deno.args.length < 1) throw new Error("No slug appear");
@@ -36,25 +36,24 @@ const notion = new Client({
 // fetch wrapper
 const _fetch = async (url: string, options: RequestInit) => {
     let response = await fetch(url, options)
-        .catch(error => { throw error; })
+        .catch(error => {
+            throw error;
+        })
     return await response.json();
 }
 const handle_page = async (page: any) => {
     // parse page
-    const slugProperty = page.properties.Slug as any;
-    const rich_text = slugProperty.rich_text;
+    const slug_property = page.properties.Slug as any;
+    const rich_text = slug_property.rich_text;
     if (rich_text.length < 1) return;
     else {
-
         const slug = rich_text[0].plain_text;
         if (slug !== url_slug) return;
         console.log("slug:" + slug);
-
-
     }
     // parse title
-    const nameItem = page.properties.Name as any;
-    title = nameItem.title[0].plain_text;
+    const name_item = page.properties.Name as any;
+    title = name_item.title[0].plain_text;
     console.log("title: " + title);
 
     // parse date
@@ -62,38 +61,39 @@ const handle_page = async (page: any) => {
     console.log("date: " + date);
 
     // parse categories
-    const categoriesProperty = page.properties.Categories as any;
-    const categoriesMultiSelect = categoriesProperty.multi_select;
-    if (categoriesMultiSelect.length > 0) {
-        categoriesMultiSelect.forEach((element: { name: string }) => {
+    const categories_property = page.properties.Categories as any;
+    const categories_multiselect = categories_property.multi_select;
+    if (categories_multiselect.length > 0) {
+        categories_multiselect.forEach((element: { name: string }) => {
             categories.push(element.name);
         });
         console.log("categories: " + categories);
     }
     // parse tags
-    const tagsProperty = page.properties.Tags as any;
-    const tagsMultiSelect = tagsProperty.multi_select;
-    if (tagsMultiSelect.length > 0) {
-        tagsMultiSelect.forEach((element: { name: string }) => {
+    const tags_property = page.properties.Tags as any;
+    const tags_multiselect = tags_property.multi_select;
+    if (tags_multiselect.length > 0) {
+        tags_multiselect.forEach((element: { name: string }) => {
             tags.push(element.name);
         });
         console.log("tag:" + tags);
     }
 
-    const pageId = page.id;
-    await create_task(pageId);
+    const page_id = page.id;
+
+    await create_task(page_id);
 }
 const create_task = async (block_id: string) => {
     console.log("creating export task ...");
 
-    const requestOptions: RequestInit = {
+    const request_options: RequestInit = {
         method: "POST",
         headers: notion_api_v3_request_headers,
         body: JSON.stringify({
             "task": {
                 "eventName": "exportBlock",
                 "request": {
-                    "block": { "id": `${block_id}` },
+                    "block": {"id": `${block_id}`},
                     "recursive": false,
                     "exportOptions": {
                         "exportType": "markdown",
@@ -106,7 +106,7 @@ const create_task = async (block_id: string) => {
         redirect: "follow",
     };
 
-    let data: { taskId: string } = await _fetch("https://www.notion.so/api/v3/enqueueTask", requestOptions);
+    let data: { taskId: string } = await _fetch("https://www.notion.so/api/v3/enqueueTask", request_options);
 
     console.log("task created with id: " + data.taskId);
 
@@ -120,9 +120,9 @@ const get_task = async (task_id: string) => {
         if (retry_count++ > 0) {
             console.log(`retry : ${retry_count}`);
         }
-        get_task(task_id);
+        await get_task(task_id);
     };
-    var request_options: RequestInit = {
+    const request_options: RequestInit = {
         method: "POST",
         headers: notion_api_v3_request_headers,
         body: JSON.stringify({
@@ -154,14 +154,14 @@ const read_zip = async (url: string) => {
         console.log(error);
         throw new Error("get zipped markdown failed");
     });
-    let arrayBuffer = response.arrayBuffer();
+    let array_buffer = response.arrayBuffer();
     const zip = new JSZip();
-    await zip.loadAsync(await arrayBuffer);
-    var entries = Object.keys(zip.files()).map(name=>name);
+    await zip.loadAsync(await array_buffer);
+    const entries = Object.keys(zip.files()).map(name => name);
     if (entries.length > 0) {
-        var name = entries[0];
-        var content: string = await zip.file(name).async("string");
-        handle_markdown(content);
+        const name = entries[0];
+        const content: string = await zip.file(name).async("string");
+        await handle_markdown(content);
     }
 };
 const items_stringify = (items: string[]) =>
